@@ -1,0 +1,12 @@
+# Compiled binaries
+/bin/
+/build/
+*.o
+*.exe
+
+# Editor/IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
