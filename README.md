@@ -8,7 +8,10 @@ Designed for **learning and revising topics**, supporting multi-line flashcards,
 ## 🔹 Features
 
 ### Version History
-**v0.1.1 (Current)**
+**v0.1.2 (Current)**
+- Improved input experience
+
+**v0.1.1**
 - Improved **Add Card** workflow:
     - Can add multiple cards in one session
     - Added `:q` to exit card input
