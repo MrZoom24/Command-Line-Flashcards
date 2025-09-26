@@ -11,3 +11,6 @@
 
 # Logs
 *.log
+
+# Save files
+*.txt
