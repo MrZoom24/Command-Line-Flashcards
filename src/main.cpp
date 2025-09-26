@@ -16,6 +16,7 @@ struct Flashcard {
 void clear_screen();
 std::string escape_newlines(const std::string& s);
 std::string unescape_newlines(const std::string& s);
+void wait_for_enter();
 
 // -----------------------------
 // Flashcard Functions
@@ -81,8 +82,10 @@ void clear_screen() {
 #endif
 }
 
-
+// -----------------------------
 // Escape/Unescape newlines for file storage
+
+
 std::string escape_newlines(const std::string& s) {
     std::string result = s;
     size_t pos = 0;
@@ -106,47 +109,82 @@ std::string unescape_newlines(const std::string& s) {
 }
 
 // -----------------------------
+// Wait For Enter
+
+
+void wait_for_enter() {
+    std::cout << "(Press Enter to continue)";
+    std::string dummy;
+    std::getline(std::cin, dummy);
+}
+
+// -----------------------------
 // Add Card
 
 
 void add_card(std::vector<Flashcard>& vecCards) {
     clear_screen();
     std::cout << "Option 'Add Card' Selected" << std::endl;
-    std::cout << "Please write the content of the front page: " << std::endl;
-    std::string inputFront;
-    std::getline(std::cin, inputFront);
+    std::cout << "Enter :q to return to main menu" << std::endl;
+    std::cout << "(Press Enter to continue)";
 
-    std::cout << "Please write the content of the back page: " << std::endl;
-    std::string inputBack;
-    std::getline(std::cin, inputBack);
-
-    // Check duplicate
-    for(Flashcard& card : vecCards) {
-        if(card.front == inputFront) {
-            std::cout << "This card already exists. Back page content: " << std::endl << card.back << std::endl;
-            std::cout << "Rewrite back? (y/n): ";
-            char choice;
-            do {
-                std::cin >> choice;
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            } while (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N');
-
-            if (choice == 'y' || choice == 'Y') {
-                card.back = inputBack; // update the original card
-                std::cout << "Card updated." << std::endl;
-            }
-            std::cout << "(Press Enter to continue)";
-            std::cin.get();
-
+    // Temporal solution for users returning to main menu right after going in add_Card();
+    std::string tempStr;
+    std::getline(std::cin, tempStr);
+    if(tempStr == ":q" || tempStr == ":Q"){
+        return;
+    }
+    
+    while(true){
+        clear_screen();
+        std::cout << "Please write the content of the front page: " << std::endl;
+        std::string inputFront;
+        std::getline(std::cin, inputFront);
+        if(inputFront == ":q" || inputFront == ":Q"){
             return;
         }
-    }
 
-    Flashcard card{inputFront, inputBack};
-    vecCards.push_back(card);
-    std::cout << "Card added." << std::endl;
-    std::cout << "(Press Enter to continue)";
-    std::cin.get();
+        std::cout << "Please write the content of the back page: " << std::endl;
+        std::string inputBack;
+        std::getline(std::cin, inputBack);
+        if(inputBack == ":q" || inputBack == ":Q"){
+            std::cout << "Card not saved. Returning to main menu" << std::endl;
+            wait_for_enter();
+            return;
+        }
+
+        // Check duplicate
+        bool isDuplicate = false;
+        for(Flashcard& card : vecCards) {
+            if(card.front == inputFront) {
+                isDuplicate = true;
+                std::cout << "This card already exists. Back page content: " << std::endl << card.back << std::endl;
+                std::cout << "Rewrite back? (y/n): ";
+                char choice;
+                do {
+                    std::cin >> choice;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                } while (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N');
+
+                if (choice == 'y' || choice == 'Y') {
+                    card.back = inputBack; // update the original card
+                    std::cout << "Card updated." << std::endl;
+                }
+                wait_for_enter();
+
+                break;
+            }
+        }
+
+        if(isDuplicate){
+            continue;
+        }
+
+        Flashcard card{inputFront, inputBack};
+        vecCards.push_back(card);
+        std::cout << "Card added." << std::endl;
+        wait_for_enter();
+    }
 }
 
 // -----------------------------
@@ -168,8 +206,7 @@ void list_cards(const std::vector<Flashcard>& vecCards) {
         }
     }
 
-    std::cout << "(Press Enter to continue)";
-    std::cin.get();
+    wait_for_enter();
 } 
 
 // -----------------------------
@@ -180,8 +217,7 @@ void quiz(const std::vector<Flashcard>& vecCards) {
     if(vecCards.empty()) {
         clear_screen();
         std::cout << "No cards available yet." << std::endl;
-        std::cout << "(Press Enter to continue)";
-        std::cin.get();
+        wait_for_enter();
         return;
     }
 
@@ -195,8 +231,7 @@ void quiz(const std::vector<Flashcard>& vecCards) {
         std::getline(std::cin, dummy);
 
         std::cout << std::endl << "Answer: " << card.back << std::endl;
-        std::cout << "(Press Enter to see answer)";
-        std::getline(std::cin, dummy);
+        wait_for_enter();
     }
 }
 
