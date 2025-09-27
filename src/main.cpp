@@ -30,6 +30,7 @@ void quiz(const std::vector<Flashcard>& vecCards);
 void load_cards(std::vector<Flashcard>& vecCards);
 void save_cards(const std::vector<Flashcard>& vecCards);
 void edit_card(std::vector<Flashcard>& vecCards);
+void delete_card(std::vector<Flashcard>& vecCards);
 
 const std::string SAVE_FILE = "data/cards.txt";
 
@@ -225,6 +226,29 @@ void edit_card(std::vector<Flashcard>& vecCards) {
 }
 
 // -----------------------------
+// Delete Card
+
+void delete_card(std::vector<Flashcard>& vecCards) {
+    std::cout << "Choose a card to delete by typing card's ID, or 0 to quit" << std::endl;
+    int maxId = vecCards.size();
+    int optionInput = get_menu_choice(0, maxId);
+    if(optionInput == 0){
+        return;
+    }
+    optionInput--; // convert to ID
+
+    if(ask_yes_no(std::string("Are you sure you want to delete card ") + vecCards[optionInput].front + "?")){
+        vecCards.erase(vecCards.begin() + optionInput);
+        std::cout << "Card Deleted." << std::endl;
+    } else{
+        std::cout << "Operation Canceled." << std::endl;
+    }
+
+    wait_for_enter();
+    return;
+}
+
+// -----------------------------
 // List Cards
 
 void list_cards(std::vector<Flashcard>& vecCards) {
@@ -247,13 +271,17 @@ void list_cards(std::vector<Flashcard>& vecCards) {
 
         std::cout << "Choose an option by inputing number: " << std::endl;
         std::cout << "1) Edit" << std::endl;
-        std::cout << "2) Quit" << std::endl;
+        std::cout << "2) Delete" << std::endl;
+        std::cout << "3) Quit" << std::endl;
         
         int optionInput = get_menu_choice(1,3);
         if(optionInput == 1) {
             edit_card(vecCards);
             save_cards(vecCards);
         } else if(optionInput == 2) {
+            delete_card(vecCards);
+            save_cards(vecCards);
+        } else if(optionInput == 3) {
             return;
         }
     }
