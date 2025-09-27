@@ -8,7 +8,14 @@ Designed for **learning and revising topics**, supporting multi-line flashcards,
 ## 🔹 Features
 
 ### Version History
-**v0.1.2 (Current)**
+**v0.1.3 (Current)**
+- Added **Edit Card** functionality
+
+- Added **Delete Card** functionality
+
+- Both edit/delete integrated into the list_cards menu
+
+**v0.1.2**
 - Improved input experience
 
 **v0.1.1**
