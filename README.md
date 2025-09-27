@@ -8,7 +8,12 @@ Designed for **learning and revising topics**, supporting multi-line flashcards,
 ## 🔹 Features
 
 ### Version History
-**v0.1.3 (Current)**
+**v0.1.4 (Current)**
+- Simple quiz improvements:
+    - Mark cards as correct or incorrect in each session
+    - Display end-of-quiz statistics: total answered, correct, incorrect, and percentage
+
+**v0.1.3**
 - Added **Edit Card** functionality
 
 - Added **Delete Card** functionality
