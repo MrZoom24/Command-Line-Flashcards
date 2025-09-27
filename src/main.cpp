@@ -298,6 +298,9 @@ void quiz(const std::vector<Flashcard>& vecCards) {
         return;
     }
 
+    int counterAnswered = 0;
+    int counterCorrect = 0;
+
     for(const Flashcard& card : vecCards) {
         clear_screen();
         std::cout << "Question: " << card.front << std::endl;
@@ -306,8 +309,22 @@ void quiz(const std::vector<Flashcard>& vecCards) {
         std::getline(std::cin, dummy);
 
         std::cout << std::endl << "Answer: " << card.back << std::endl;
-        wait_for_enter();
+
+        if(ask_yes_no("Did you answer correctly?")){
+            counterAnswered++;
+            counterCorrect++;
+        } else {
+            counterAnswered++;
+        }
     }
+
+    clear_screen();
+    double percent = counterAnswered > 0 ? (double)counterCorrect / counterAnswered * 100 : 0;
+    std::cout << "Total cards answered: " << counterAnswered << std::endl;
+    std::cout << "Correct answers: " << counterCorrect << std::endl;
+    std::cout << "Incorrect answers: " << counterAnswered - counterCorrect << std::endl;
+    std::cout << "Correct percentage: " << percent << "%" << std::endl;
+    wait_for_enter();
 }
 
 // -----------------------------
