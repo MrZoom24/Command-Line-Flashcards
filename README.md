@@ -123,7 +123,6 @@ bin\app.exe
     - New methods of answering
     - CSV/JSON export of stats
     - Improved UI
-    - Editing/Deleting
     - Spaced repetition algorithm
 
 ---
