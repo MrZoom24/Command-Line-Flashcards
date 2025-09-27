@@ -3,6 +3,8 @@
 #include <vector>
 #include <fstream>
 #include <limits>
+#include <algorithm>
+#include <cctype>
 
 struct Flashcard {
     std::string front; // Question
@@ -23,10 +25,11 @@ bool ask_yes_no(const std::string& question);
 // Flashcard Functions
 
 void add_card(std::vector<Flashcard>& vecCards);
-void list_cards(const std::vector<Flashcard>& vecCards);
+void list_cards(std::vector<Flashcard>& vecCards);
 void quiz(const std::vector<Flashcard>& vecCards);
 void load_cards(std::vector<Flashcard>& vecCards);
 void save_cards(const std::vector<Flashcard>& vecCards);
+void edit_card(std::vector<Flashcard>& vecCards);
 
 const std::string SAVE_FILE = "data/cards.txt";
 
@@ -185,24 +188,75 @@ void add_card(std::vector<Flashcard>& vecCards) {
 }
 
 // -----------------------------
-// List Cards
+// Edit Card
 
-void list_cards(const std::vector<Flashcard>& vecCards) {
-    clear_screen();
-    std::cout << "Option 'List Cards' Selected" << std::endl;
+void edit_card(std::vector<Flashcard>& vecCards) {
+    std::cout << "Choose a card to edit by typing card's ID, or 0 to quit" << std::endl;
+    int maxId = vecCards.size();
+    int optionInput = get_menu_choice(0, maxId);
+    if(optionInput == 0){
+        return;
+    }
+    optionInput--; // convert to ID
 
-    if (vecCards.empty()) {
-        std::cout << "No cards available yet." << std::endl;
-    } else {
-        for(size_t i = 0; i < vecCards.size(); i++) {
-            std::cout << "Card " << i + 1 << ": " << std::endl;
-            std::cout << "Question: " << vecCards[i].front << std::endl;
-            std::cout << "Answer: " << vecCards[i].back << std::endl;
-            std::cout << "---------------------------" << std::endl;
-        }
+    std::cout << "Editing card " << vecCards[optionInput].front << std::endl;
+    std::cout << "Enter new front (leave blank to keep same, or :q to quit): ";
+    std::string newFront;
+    std::getline(std::cin, newFront);
+    if(newFront == ":q" || newFront == ":Q") return;
+    std::cout << "Enter new back (leave blank to keep same, or :q to quit): ";
+    std::string newBack;
+    std::getline(std::cin, newBack);
+    if(newBack == ":q" || newBack == ":Q") return;
+
+    // check if input is only whitespace
+    bool onlySpacesFront = std::all_of(newFront.begin(), newFront.end(), isspace);
+    bool onlySpacesBack = std::all_of(newBack.begin(), newBack.end(), isspace);
+    if(!newFront.empty() && !onlySpacesFront) {
+        vecCards[optionInput].front = newFront;
+    }
+    if(!newBack.empty() && !onlySpacesBack) {
+        vecCards[optionInput].back = newBack;
     }
 
+    std::cout << "Card Edited." << std::endl;
     wait_for_enter();
+    return;
+}
+
+// -----------------------------
+// List Cards
+
+void list_cards(std::vector<Flashcard>& vecCards) {
+    while(true) {
+        clear_screen();
+        std::cout << "Option 'List Cards' Selected" << std::endl;
+
+        if (vecCards.empty()) {
+            std::cout << "No cards available yet." << std::endl;
+            wait_for_enter();
+            return;
+        } else {
+            for(size_t i = 0; i < vecCards.size(); i++) {
+                std::cout << "Card " << i + 1 << ": " << std::endl;
+                std::cout << "Question: " << vecCards[i].front << std::endl;
+                std::cout << "Answer: " << vecCards[i].back << std::endl;
+                std::cout << "---------------------------" << std::endl;
+            }
+        }
+
+        std::cout << "Choose an option by inputing number: " << std::endl;
+        std::cout << "1) Edit" << std::endl;
+        std::cout << "2) Quit" << std::endl;
+        
+        int optionInput = get_menu_choice(1,3);
+        if(optionInput == 1) {
+            edit_card(vecCards);
+            save_cards(vecCards);
+        } else if(optionInput == 2) {
+            return;
+        }
+    }
 } 
 
 // -----------------------------
