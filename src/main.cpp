@@ -1,20 +1,18 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <fstream>
 #include <limits>
 #include <algorithm>
 #include <cctype>
 #include "Utils.hpp"
 #include "Flashcard.hpp"
 #include "Deck.hpp"
+#include "Storage.hpp"
 
 // -----------------------------
 // Flashcard Functions
 
 void quiz(const std::vector<Flashcard>& vecCards);
-void load_cards(std::vector<Flashcard>& vecCards);
-void save_cards(const std::vector<Flashcard>& vecCards);
 
 const std::string SAVE_FILE = "data/cards.txt";
 
@@ -23,7 +21,7 @@ const std::string SAVE_FILE = "data/cards.txt";
 
 int main() {
     std::vector<Flashcard> cards;
-    load_cards(cards);
+    load_cards(cards, SAVE_FILE);
 
     while(true) {
         clear_screen();
@@ -37,13 +35,13 @@ int main() {
 
         if(optionInput == 1) {
             add_card(cards);
-            save_cards(cards);
+            save_cards(cards, SAVE_FILE);
         } else if(optionInput == 2) {
             list_cards(cards);
         } else if(optionInput == 3) {
             quiz(cards);
         } else if(optionInput == 4) {
-            save_cards(cards);
+            save_cards(cards, SAVE_FILE);
             break;
         }
     }
@@ -89,27 +87,4 @@ void quiz(const std::vector<Flashcard>& vecCards) {
     std::cout << "Incorrect answers: " << counterAnswered - counterCorrect << std::endl;
     std::cout << "Correct percentage: " << percent << "%" << std::endl;
     wait_for_enter();
-}
-
-// -----------------------------
-// Save / Load Cards
-
-void save_cards(const std::vector<Flashcard>& vecCards) {
-    std::ofstream file(SAVE_FILE);
-    if(!file) return;
-
-    for(const Flashcard& card : vecCards) {
-        file << escape_newlines(card.front) << '\n';
-        file << escape_newlines(card.back) << '\n';
-    }
-}
-
-void load_cards(std::vector<Flashcard>& vecCards) {
-    std::ifstream file(SAVE_FILE);
-    if(!file) return;
-
-    std::string front, back;
-    while(std::getline(file, front) && std::getline(file, back)) {
-        vecCards.push_back({unescape_newlines(front), unescape_newlines(back)});
-    }
 }
