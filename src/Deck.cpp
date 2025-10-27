@@ -4,6 +4,8 @@
 #include <iostream>
 #include <algorithm>
 
+const std::string SAVE_FILE = "data/cards.txt";
+
 void add_card(std::vector<Flashcard>& vecCards) {
     clear_screen();
     std::cout << "Option 'Add Card' Selected" << std::endl;
@@ -136,10 +138,10 @@ void list_cards(std::vector<Flashcard>& vecCards) {
         int optionInput = get_menu_choice(1,3);
         if(optionInput == 1) {
             edit_card(vecCards);
-            save_cards(vecCards);
+            save_cards(vecCards, SAVE_FILE);
         } else if(optionInput == 2) {
             delete_card(vecCards);
-            save_cards(vecCards);
+            save_cards(vecCards, SAVE_FILE);
         } else if(optionInput == 3) {
             return;
         }
