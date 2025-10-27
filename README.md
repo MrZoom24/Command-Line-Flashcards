@@ -8,50 +8,34 @@ Designed for **learning and revising topics**, supporting multi-line flashcards,
 ## 🔹 Features
 
 ### Version History
-**v0.1.4 (Current)**
-- Simple quiz improvements:
-    - Mark cards as correct or incorrect in each session
-    - Display end-of-quiz statistics: total answered, correct, incorrect, and percentage
-
-**v0.1.3**
-- Added **Edit Card** functionality
-
-- Added **Delete Card** functionality
-
-- Both edit/delete integrated into the list_cards menu
-
-**v0.1.2**
-- Improved input experience
-
-**v0.1.1**
-- Improved **Add Card** workflow:
-    - Can add multiple cards in one session
-    - Added `:q` to exit card input
-- Fixed input buffer bug when entering menu options
-
-**v0.1**
-- Add / List / Quiz flashcards
-- Basic input handling
-- Numeric menu selection
-- Cross-platform screen clearing (`cls` for Windows, `clear` for Linux/macOS)
-- Persistent storage in `data/cards.txt` (saved automatically)
-- Supports **multi-line flashcards** using escape/unescape mechanism
-- Keeps quiz question and answer together for better readability
-- `.gitignore` configured to ignore local save file
-
----
+| Version | Notes |
+|---------|-------|
+| **v0.2 (Current)** | Refactored project structure into multiple files (Deck, Flashcard, Quiz, Storage, Utils). Easier to extend with new features like quiz modes, stats, groups, spaced repetition, and TUI. Maintains full cross-platform support. |
+| **v0.1.x** | Initial features: Add/List/Quiz flashcards, multi-line support, persistent storage (`data/cards.txt`), Edit/Delete cards, improved Add Card workflow, quiz session stats, cross-platform screen clearing, numeric menu input. |
 
 ## 🔹 Project Structure
 
 ```bash
 Flashcards/
-├─ bin/ # compiled executable
-├─ src/ # source code
-│ └─ main.cpp
-├─ data/ # save files (tracked only with .gitkeep)
-│ └─ .gitkeep
+├─ bin/           # compiled executable
+├─ src/           # source code
+│  ├─ main.cpp
+│  ├─ Deck.cpp
+│  ├─ Flashcard.cpp
+│  ├─ Quiz.cpp
+│  ├─ Storage.cpp
+│  └─ Utils.cpp
+├─ include/       # header files
+│  ├─ Deck.hpp
+│  ├─ Flashcard.hpp
+│  ├─ Quiz.hpp
+│  ├─ Storage.hpp
+│  └─ Utils.hpp
+├─ data/          # save files (tracked only with .gitkeep)
+│  └─ .gitkeep
 ├─ .gitignore
 └─ README.md
+
 ```
 
 > `data/cards.txt` is automatically created when the app runs.  
@@ -65,7 +49,8 @@ Flashcards/
 
 1. Compile:
 ```bash
-g++ -o bin/app src/main.cpp
+g++ -std=c++17 -Iinclude src/*.cpp -o bin/app
+
 ```
 2. Run:
 ```bash
@@ -76,7 +61,8 @@ g++ -o bin/app src/main.cpp
 
 1. Compile:
 ```bash
-g++ -o bin/app.exe src/main.cpp
+g++ -std=c++17 -Iinclude src/*.cpp -o bin/app.exe
+
 ```
 2. Run:
 ```bash
@@ -107,11 +93,17 @@ bin\app.exe
 2. List flashcards
     - Choose menu option `2`
     - Displays all saved flashcards
+    - Fromt the list, you can:
+        - **Edit a card** -> choose card ID, update front/back
+        - **Delete a card** -> choose card ID, confirm deletion
 3. Quiz mode
     - Choose menu option `3`
     - Shows each question and waits for Enter to show answer
+    - After seeing the answer, mark if you answered correctly
     - Move to next card with Enter
+    - At the end, summary statistics are shown (total answered, correct, incorrect, percentage)
 4. Quit
+    - Choose menu option `4`
     - Saves all cards automatically
 
 ---
@@ -124,10 +116,10 @@ bin\app.exe
     - Search/filter cards
     - Shuffle quiz mode
     - Categories/tags for cards
-    - Statistics
+    - Statistics and analytics
     - New methods of answering
     - CSV/JSON export of stats
-    - Improved UI
+    - Improved UI (TUI)
     - Spaced repetition algorithm
 
 ---
