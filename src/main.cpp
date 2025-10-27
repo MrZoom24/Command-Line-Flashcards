@@ -6,11 +6,7 @@
 #include <algorithm>
 #include <cctype>
 #include "Utils.hpp"
-
-struct Flashcard {
-    std::string front; // Question
-    std::string back;  // Answer
-};
+#include "Flashcard.hpp"
 
 // -----------------------------
 // Flashcard Functions
